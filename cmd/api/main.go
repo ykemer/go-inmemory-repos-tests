@@ -4,6 +4,7 @@ import (
 	"log"
 	"tests/internal/config"
 	"tests/internal/handlers"
+	"tests/internal/idempotency"
 	"tests/internal/middleware"
 	"tests/internal/repositories"
 	"tests/internal/services"
@@ -30,6 +31,8 @@ func main() {
 	orgHandler := handlers.NewOrganizationHandler(orgService)
 	contractHandler := handlers.NewContractHandler(contractService)
 
+	idempotencyStore := idempotency.NewInMemoryStore(1 * time.Hour)
+
 	app := fiber.New(fiber.Config{
 		ErrorHandler: middleware.ProblemJSONErrorHandler,
 	})
@@ -41,6 +44,7 @@ func main() {
 			return fiber.NewError(fiber.StatusTooManyRequests, "Rate limit exceeded, try again later")
 		},
 	}))
+	app.Use(middleware.Idempotency(idempotencyStore))
 
 	api := app.Group("/api")
 

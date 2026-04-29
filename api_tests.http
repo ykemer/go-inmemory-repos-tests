@@ -24,7 +24,7 @@ POST {{baseUrl}}/organizations
 Content-Type: application/json
 
 {
-    "name": "Acme Corp",
+    "name": "Acme Corp 2",
     "email": "contact@acme.com"
 }
 
