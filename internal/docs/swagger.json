@@ -24,7 +24,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/tests_internal_dtos.OrganizationResponse"
+                                "$ref": "#/definitions/OrganizationResponse"
                             }
                         }
                     }
@@ -54,7 +54,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.CreateOrganizationRequest"
+                            "$ref": "#/definitions/CreateOrganizationRequest"
                         }
                     }
                 ],
@@ -62,13 +62,13 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.OrganizationResponse"
+                            "$ref": "#/definitions/OrganizationResponse"
                         }
                     },
                     "422": {
                         "description": "Unprocessable Entity",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.ProblemDetail"
+                            "$ref": "#/definitions/ProblemDetail"
                         }
                     }
                 }
@@ -96,13 +96,13 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.OrganizationResponse"
+                            "$ref": "#/definitions/OrganizationResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.ProblemDetail"
+                            "$ref": "#/definitions/ProblemDetail"
                         }
                     }
                 }
@@ -138,7 +138,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.UpdateOrganizationRequest"
+                            "$ref": "#/definitions/UpdateOrganizationRequest"
                         }
                     }
                 ],
@@ -146,19 +146,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.OrganizationResponse"
+                            "$ref": "#/definitions/OrganizationResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.ProblemDetail"
+                            "$ref": "#/definitions/ProblemDetail"
                         }
                     },
                     "422": {
                         "description": "Unprocessable Entity",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.ProblemDetail"
+                            "$ref": "#/definitions/ProblemDetail"
                         }
                     }
                 }
@@ -187,7 +187,7 @@
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.ProblemDetail"
+                            "$ref": "#/definitions/ProblemDetail"
                         }
                     }
                 }
@@ -217,14 +217,14 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/tests_internal_dtos.ContractResponse"
+                                "$ref": "#/definitions/ContractResponse"
                             }
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.ProblemDetail"
+                            "$ref": "#/definitions/ProblemDetail"
                         }
                     }
                 }
@@ -260,7 +260,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.CreateContractRequest"
+                            "$ref": "#/definitions/CreateContractRequest"
                         }
                     }
                 ],
@@ -268,19 +268,19 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.ContractResponse"
+                            "$ref": "#/definitions/ContractResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.ProblemDetail"
+                            "$ref": "#/definitions/ProblemDetail"
                         }
                     },
                     "422": {
                         "description": "Unprocessable Entity",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.ProblemDetail"
+                            "$ref": "#/definitions/ProblemDetail"
                         }
                     }
                 }
@@ -315,13 +315,13 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.ContractResponse"
+                            "$ref": "#/definitions/ContractResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.ProblemDetail"
+                            "$ref": "#/definitions/ProblemDetail"
                         }
                     }
                 }
@@ -364,7 +364,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.UpdateContractRequest"
+                            "$ref": "#/definitions/UpdateContractRequest"
                         }
                     }
                 ],
@@ -372,19 +372,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.ContractResponse"
+                            "$ref": "#/definitions/ContractResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.ProblemDetail"
+                            "$ref": "#/definitions/ProblemDetail"
                         }
                     },
                     "422": {
                         "description": "Unprocessable Entity",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.ProblemDetail"
+                            "$ref": "#/definitions/ProblemDetail"
                         }
                     }
                 }
@@ -420,7 +420,7 @@
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/tests_internal_dtos.ProblemDetail"
+                            "$ref": "#/definitions/ProblemDetail"
                         }
                     }
                 }
@@ -428,7 +428,7 @@
         }
     },
     "definitions": {
-        "tests_internal_dtos.ContractResponse": {
+        "ContractResponse": {
             "type": "object",
             "properties": {
                 "description": {
@@ -451,7 +451,7 @@
                 }
             }
         },
-        "tests_internal_dtos.CreateContractRequest": {
+        "CreateContractRequest": {
             "type": "object",
             "required": [
                 "description",
@@ -477,7 +477,7 @@
                 }
             }
         },
-        "tests_internal_dtos.CreateOrganizationRequest": {
+        "CreateOrganizationRequest": {
             "type": "object",
             "required": [
                 "email",
@@ -494,7 +494,7 @@
                 }
             }
         },
-        "tests_internal_dtos.OrganizationResponse": {
+        "OrganizationResponse": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -511,7 +511,7 @@
                 }
             }
         },
-        "tests_internal_dtos.ProblemDetail": {
+        "ProblemDetail": {
             "type": "object",
             "properties": {
                 "detail": {
@@ -534,7 +534,7 @@
                 }
             }
         },
-        "tests_internal_dtos.UpdateContractRequest": {
+        "UpdateContractRequest": {
             "type": "object",
             "required": [
                 "description",
@@ -560,7 +560,7 @@
                 }
             }
         },
-        "tests_internal_dtos.UpdateOrganizationRequest": {
+        "UpdateOrganizationRequest": {
             "type": "object",
             "required": [
                 "email",

@@ -95,3 +95,40 @@ go install github.com/swaggo/swag/cmd/swag@latest
 1. Edit or add `// @` annotations on the handler function (see any existing handler for examples).
 2. Run `make docs`.
 3. Restart the server — the new spec is live at `/docs`.
+
+---
+
+## MCP Server
+
+`cmd/mcp/main.go` exposes all 10 service operations as MCP tools over stdio, so any MCP-compatible client (Claude Desktop, Cursor, etc.) can call them directly.
+
+```bash
+make mcp-run    # start the MCP server (stdio)
+make mcp-build  # compile to bin/mcp
+```
+
+### Inspecting with MCP Inspector
+
+[MCP Inspector](https://github.com/modelcontextprotocol/inspector) is a browser-based UI for exploring and calling tools on any stdio MCP server. No install needed — `npx` pulls it on first run.
+
+**Prerequisites:** Node.js 18+
+
+**Run against the source directly:**
+```bash
+npx @modelcontextprotocol/inspector go run cmd/mcp/main.go
+```
+
+**Or against the compiled binary (faster start):**
+```bash
+make mcp-build
+npx @modelcontextprotocol/inspector ./bin/mcp
+```
+
+Inspector opens at **[http://localhost:5173](http://localhost:5173)**. From there you can:
+
+1. Click **Tools** in the left sidebar to see all 10 registered tools.
+2. Select a tool (e.g. `create_organization`) — Inspector renders its input schema as a form.
+3. Fill in the fields and hit **Run Tool** to send a live call to the server.
+4. The raw JSON request and response are shown side by side.
+
+> The MCP server connects to the real PostgreSQL database (same `.env` config as the HTTP server). Make sure the DB is running before launching it.

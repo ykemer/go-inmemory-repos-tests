@@ -1,3 +1,5 @@
+//go:generate swag init -g cmd/api/main.go -o internal/docs --outputTypes json --parseDependency --parseInternal
+
 // @title           Organizations & Contracts API
 // @version         1.0.0
 // @description     REST API for managing organizations and their contracts.
@@ -67,7 +69,7 @@ func main() {
 	// Docs
 	app.Get("/docs/openapi.json", func(c *fiber.Ctx) error {
 		c.Set(fiber.HeaderContentType, "application/json")
-		return c.SendString(docs.SwaggerInfo.ReadDoc())
+		return c.Send(docs.Spec)
 	})
 	app.Get("/docs", func(c *fiber.Ctx) error {
 		c.Set(fiber.HeaderContentType, "text/html")

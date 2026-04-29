@@ -1,6 +1,6 @@
 basePath: /api
 definitions:
-  tests_internal_dtos.ContractResponse:
+  ContractResponse:
     properties:
       description:
         type: string
@@ -15,7 +15,7 @@ definitions:
       title:
         type: string
     type: object
-  tests_internal_dtos.CreateContractRequest:
+  CreateContractRequest:
     properties:
       description:
         minLength: 10
@@ -34,7 +34,7 @@ definitions:
     - start_date
     - title
     type: object
-  tests_internal_dtos.CreateOrganizationRequest:
+  CreateOrganizationRequest:
     properties:
       email:
         type: string
@@ -46,7 +46,7 @@ definitions:
     - email
     - name
     type: object
-  tests_internal_dtos.OrganizationResponse:
+  OrganizationResponse:
     properties:
       created_at:
         type: string
@@ -57,7 +57,7 @@ definitions:
       name:
         type: string
     type: object
-  tests_internal_dtos.ProblemDetail:
+  ProblemDetail:
     properties:
       detail:
         type: string
@@ -72,7 +72,7 @@ definitions:
       type:
         type: string
     type: object
-  tests_internal_dtos.UpdateContractRequest:
+  UpdateContractRequest:
     properties:
       description:
         minLength: 10
@@ -91,7 +91,7 @@ definitions:
     - start_date
     - title
     type: object
-  tests_internal_dtos.UpdateOrganizationRequest:
+  UpdateOrganizationRequest:
     properties:
       email:
         type: string
@@ -126,7 +126,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/tests_internal_dtos.OrganizationResponse'
+              $ref: '#/definitions/OrganizationResponse'
             type: array
       summary: List all organizations
       tags:
@@ -145,18 +145,18 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/tests_internal_dtos.CreateOrganizationRequest'
+          $ref: '#/definitions/CreateOrganizationRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/tests_internal_dtos.OrganizationResponse'
+            $ref: '#/definitions/OrganizationResponse'
         "422":
           description: Unprocessable Entity
           schema:
-            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+            $ref: '#/definitions/ProblemDetail'
       summary: Create an organization
       tags:
       - Organizations
@@ -176,7 +176,7 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+            $ref: '#/definitions/ProblemDetail'
       summary: Delete an organization
       tags:
       - Organizations
@@ -193,11 +193,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/tests_internal_dtos.OrganizationResponse'
+            $ref: '#/definitions/OrganizationResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+            $ref: '#/definitions/ProblemDetail'
       summary: Get an organization
       tags:
       - Organizations
@@ -220,22 +220,22 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/tests_internal_dtos.UpdateOrganizationRequest'
+          $ref: '#/definitions/UpdateOrganizationRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/tests_internal_dtos.OrganizationResponse'
+            $ref: '#/definitions/OrganizationResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+            $ref: '#/definitions/ProblemDetail'
         "422":
           description: Unprocessable Entity
           schema:
-            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+            $ref: '#/definitions/ProblemDetail'
       summary: Update an organization
       tags:
       - Organizations
@@ -254,12 +254,12 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/tests_internal_dtos.ContractResponse'
+              $ref: '#/definitions/ContractResponse'
             type: array
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+            $ref: '#/definitions/ProblemDetail'
       summary: List contracts for an organization
       tags:
       - Contracts
@@ -282,22 +282,22 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/tests_internal_dtos.CreateContractRequest'
+          $ref: '#/definitions/CreateContractRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/tests_internal_dtos.ContractResponse'
+            $ref: '#/definitions/ContractResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+            $ref: '#/definitions/ProblemDetail'
         "422":
           description: Unprocessable Entity
           schema:
-            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+            $ref: '#/definitions/ProblemDetail'
       summary: Create a contract
       tags:
       - Contracts
@@ -322,7 +322,7 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+            $ref: '#/definitions/ProblemDetail'
       summary: Delete a contract
       tags:
       - Contracts
@@ -344,11 +344,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/tests_internal_dtos.ContractResponse'
+            $ref: '#/definitions/ContractResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+            $ref: '#/definitions/ProblemDetail'
       summary: Get a contract
       tags:
       - Contracts
@@ -376,22 +376,22 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/tests_internal_dtos.UpdateContractRequest'
+          $ref: '#/definitions/UpdateContractRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/tests_internal_dtos.ContractResponse'
+            $ref: '#/definitions/ContractResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+            $ref: '#/definitions/ProblemDetail'
         "422":
           description: Unprocessable Entity
           schema:
-            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+            $ref: '#/definitions/ProblemDetail'
       summary: Update a contract
       tags:
       - Contracts

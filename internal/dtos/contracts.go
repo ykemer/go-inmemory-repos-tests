@@ -7,14 +7,14 @@ type CreateContractRequest struct {
 	Description string    `json:"description" validate:"required,min=10"`
 	StartDate   time.Time `json:"start_date" validate:"required"`
 	EndDate     time.Time `json:"end_date" validate:"required,gtfield=StartDate"`
-}
+} // @name CreateContractRequest
 
 type UpdateContractRequest struct {
 	Title       string    `json:"title" validate:"required,min=5,max=200"`
 	Description string    `json:"description" validate:"required,min=10"`
 	StartDate   time.Time `json:"start_date" validate:"required"`
 	EndDate     time.Time `json:"end_date" validate:"required,gtfield=StartDate"`
-}
+} // @name UpdateContractRequest
 
 type ContractResponse struct {
 	ID             uint      `json:"id"`
@@ -23,4 +23,4 @@ type ContractResponse struct {
 	Description    string    `json:"description"`
 	StartDate      time.Time `json:"start_date"`
 	EndDate        time.Time `json:"end_date"`
-}
+} // @name ContractResponse

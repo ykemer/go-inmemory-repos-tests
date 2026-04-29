@@ -8,4 +8,4 @@ type ProblemDetail struct {
 	Status        int               `json:"status"`
 	Detail        string            `json:"detail,omitempty"`
 	InvalidParams map[string]string `json:"invalid_params,omitempty"`
-}
+} // @name ProblemDetail
