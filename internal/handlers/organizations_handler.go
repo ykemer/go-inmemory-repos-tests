@@ -18,6 +18,12 @@ func NewOrganizationHandler(service *services.OrganizationService) *Organization
 	return &OrganizationHandler{service: service}
 }
 
+// List godoc
+// @Summary      List all organizations
+// @Tags         Organizations
+// @Produce      json
+// @Success      200  {array}   dtos.OrganizationResponse
+// @Router       /organizations [get]
 func (h *OrganizationHandler) List(c *fiber.Ctx) error {
 	res, err := h.service.List(c.Context())
 	if err != nil {
@@ -26,6 +32,14 @@ func (h *OrganizationHandler) List(c *fiber.Ctx) error {
 	return c.JSON(res)
 }
 
+// Get godoc
+// @Summary      Get an organization
+// @Tags         Organizations
+// @Produce      json
+// @Param        id   path      int  true  "Organization ID"
+// @Success      200  {object}  dtos.OrganizationResponse
+// @Failure      404  {object}  dtos.ProblemDetail
+// @Router       /organizations/{id} [get]
 func (h *OrganizationHandler) Get(c *fiber.Ctx) error {
 	id := c.Params("id")
 	res, err := h.service.Get(c.Context(), id)
@@ -35,6 +49,16 @@ func (h *OrganizationHandler) Get(c *fiber.Ctx) error {
 	return c.JSON(res)
 }
 
+// Create godoc
+// @Summary      Create an organization
+// @Tags         Organizations
+// @Accept       json
+// @Produce      json
+// @Param        Idempotency-Key  header  string                           false  "Client-generated UUID. Repeated requests with the same key return the cached response for 1 hour."
+// @Param        body             body    dtos.CreateOrganizationRequest   true   "Request body"
+// @Success      201  {object}  dtos.OrganizationResponse
+// @Failure      422  {object}  dtos.ProblemDetail
+// @Router       /organizations [post]
 func (h *OrganizationHandler) Create(c *fiber.Ctx) error {
 	req := new(dtos.CreateOrganizationRequest)
 	if err := c.BodyParser(req); err != nil {
@@ -53,6 +77,18 @@ func (h *OrganizationHandler) Create(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(res)
 }
 
+// Update godoc
+// @Summary      Update an organization
+// @Tags         Organizations
+// @Accept       json
+// @Produce      json
+// @Param        id               path    int                              true   "Organization ID"
+// @Param        Idempotency-Key  header  string                           false  "Client-generated UUID. Repeated requests with the same key return the cached response for 1 hour."
+// @Param        body             body    dtos.UpdateOrganizationRequest   true   "Request body"
+// @Success      200  {object}  dtos.OrganizationResponse
+// @Failure      404  {object}  dtos.ProblemDetail
+// @Failure      422  {object}  dtos.ProblemDetail
+// @Router       /organizations/{id} [put]
 func (h *OrganizationHandler) Update(c *fiber.Ctx) error {
 	id := c.Params("id")
 	req := new(dtos.UpdateOrganizationRequest)
@@ -72,6 +108,14 @@ func (h *OrganizationHandler) Update(c *fiber.Ctx) error {
 	return c.JSON(res)
 }
 
+// Delete godoc
+// @Summary      Delete an organization
+// @Tags         Organizations
+// @Produce      json
+// @Param        id   path  int  true  "Organization ID"
+// @Success      204
+// @Failure      404  {object}  dtos.ProblemDetail
+// @Router       /organizations/{id} [delete]
 func (h *OrganizationHandler) Delete(c *fiber.Ctx) error {
 	id := c.Params("id")
 	if err := h.service.Delete(c.Context(), id); err != nil {

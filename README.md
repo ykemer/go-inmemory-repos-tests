@@ -63,3 +63,35 @@ This command runs all service-level tests with **100% coverage**, proving that a
 
 ### Manual Testing
 A pre-configured `api_tests.http` file is included for use with any REST client.
+
+---
+
+## API Reference (Scalar)
+
+Once the server is running, open **[http://localhost:3000/docs](http://localhost:3000/docs)** in your browser.
+
+[Scalar](https://scalar.com) is a modern API reference UI — a cleaner, interactive alternative to Swagger UI. Browse every endpoint, inspect request/response schemas, and send live requests directly from the browser.
+
+| URL | What it serves |
+|---|---|
+| `GET /docs` | Scalar interactive UI |
+| `GET /docs/openapi.json` | Raw Swagger 2.0 spec (auto-generated) |
+
+### How the spec is generated
+
+The spec is **auto-generated from source code** using [swag](https://github.com/swaggo/swag). Each handler carries `// @` annotations that describe its route, parameters, and response shapes. Running `make docs` regenerates `internal/docs/` from those annotations — so the spec always stays in sync with the code.
+
+```bash
+make docs   # regenerate after changing handler annotations
+```
+
+One-time setup (install the CLI):
+```bash
+go install github.com/swaggo/swag/cmd/swag@latest
+```
+
+### Adding or updating an endpoint
+
+1. Edit or add `// @` annotations on the handler function (see any existing handler for examples).
+2. Run `make docs`.
+3. Restart the server — the new spec is live at `/docs`.

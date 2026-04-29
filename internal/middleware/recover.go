@@ -31,7 +31,7 @@ func Recover(logf ...func(format string, args ...any)) fiber.Handler {
 			logger("PANIC recovered on %s %s: %v\n%s",
 				c.Method(), c.Path(), r, debug.Stack())
 
-			p := problem{
+			p := Problem{
 				Type:   fmt.Sprintf("https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/%d", fiber.StatusInternalServerError),
 				Title:  http.StatusText(fiber.StatusInternalServerError),
 				Status: fiber.StatusInternalServerError,

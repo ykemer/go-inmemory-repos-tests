@@ -1,4 +1,4 @@
-.PHONY: run test build clean
+.PHONY: run test build clean docs
 
 # Run the API application
 run:
@@ -18,3 +18,8 @@ build:
 # Clean build artifacts
 clean:
 	rm -rf bin/
+
+# Regenerate OpenAPI spec from handler annotations.
+# Requires: go install github.com/swaggo/swag/cmd/swag@latest
+docs:
+	swag init -g cmd/api/main.go -o internal/docs --parseDependency --parseInternal

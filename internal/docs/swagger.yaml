@@ -1,0 +1,398 @@
+basePath: /api
+definitions:
+  tests_internal_dtos.ContractResponse:
+    properties:
+      description:
+        type: string
+      end_date:
+        type: string
+      id:
+        type: integer
+      organization_id:
+        type: integer
+      start_date:
+        type: string
+      title:
+        type: string
+    type: object
+  tests_internal_dtos.CreateContractRequest:
+    properties:
+      description:
+        minLength: 10
+        type: string
+      end_date:
+        type: string
+      start_date:
+        type: string
+      title:
+        maxLength: 200
+        minLength: 5
+        type: string
+    required:
+    - description
+    - end_date
+    - start_date
+    - title
+    type: object
+  tests_internal_dtos.CreateOrganizationRequest:
+    properties:
+      email:
+        type: string
+      name:
+        maxLength: 100
+        minLength: 3
+        type: string
+    required:
+    - email
+    - name
+    type: object
+  tests_internal_dtos.OrganizationResponse:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  tests_internal_dtos.ProblemDetail:
+    properties:
+      detail:
+        type: string
+      invalid_params:
+        additionalProperties:
+          type: string
+        type: object
+      status:
+        type: integer
+      title:
+        type: string
+      type:
+        type: string
+    type: object
+  tests_internal_dtos.UpdateContractRequest:
+    properties:
+      description:
+        minLength: 10
+        type: string
+      end_date:
+        type: string
+      start_date:
+        type: string
+      title:
+        maxLength: 200
+        minLength: 5
+        type: string
+    required:
+    - description
+    - end_date
+    - start_date
+    - title
+    type: object
+  tests_internal_dtos.UpdateOrganizationRequest:
+    properties:
+      email:
+        type: string
+      name:
+        maxLength: 100
+        minLength: 3
+        type: string
+    required:
+    - email
+    - name
+    type: object
+host: localhost:3000
+info:
+  contact: {}
+  description: |-
+    REST API for managing organizations and their contracts.
+
+    ## Idempotency
+    POST and PUT endpoints accept an optional Idempotency-Key header (UUID). Repeated requests with the same key return the cached response for 1 hour, with X-Idempotency-Replayed: true.
+
+    ## Errors
+    All errors are RFC 7807 application/problem+json.
+  title: Organizations & Contracts API
+  version: 1.0.0
+paths:
+  /organizations:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/tests_internal_dtos.OrganizationResponse'
+            type: array
+      summary: List all organizations
+      tags:
+      - Organizations
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Client-generated UUID. Repeated requests with the same key return
+          the cached response for 1 hour.
+        in: header
+        name: Idempotency-Key
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/tests_internal_dtos.CreateOrganizationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.OrganizationResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+      summary: Create an organization
+      tags:
+      - Organizations
+  /organizations/{id}:
+    delete:
+      parameters:
+      - description: Organization ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+      summary: Delete an organization
+      tags:
+      - Organizations
+    get:
+      parameters:
+      - description: Organization ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.OrganizationResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+      summary: Get an organization
+      tags:
+      - Organizations
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Client-generated UUID. Repeated requests with the same key return
+          the cached response for 1 hour.
+        in: header
+        name: Idempotency-Key
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/tests_internal_dtos.UpdateOrganizationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.OrganizationResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+      summary: Update an organization
+      tags:
+      - Organizations
+  /organizations/{orgId}/contracts:
+    get:
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/tests_internal_dtos.ContractResponse'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+      summary: List contracts for an organization
+      tags:
+      - Contracts
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: integer
+      - description: Client-generated UUID. Repeated requests with the same key return
+          the cached response for 1 hour.
+        in: header
+        name: Idempotency-Key
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/tests_internal_dtos.CreateContractRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.ContractResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+      summary: Create a contract
+      tags:
+      - Contracts
+  /organizations/{orgId}/contracts/{contractId}:
+    delete:
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: integer
+      - description: Contract ID
+        in: path
+        name: contractId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+      summary: Delete a contract
+      tags:
+      - Contracts
+    get:
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: integer
+      - description: Contract ID
+        in: path
+        name: contractId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.ContractResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+      summary: Get a contract
+      tags:
+      - Contracts
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: integer
+      - description: Contract ID
+        in: path
+        name: contractId
+        required: true
+        type: integer
+      - description: Client-generated UUID. Repeated requests with the same key return
+          the cached response for 1 hour.
+        in: header
+        name: Idempotency-Key
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/tests_internal_dtos.UpdateContractRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.ContractResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/tests_internal_dtos.ProblemDetail'
+      summary: Update a contract
+      tags:
+      - Contracts
+swagger: "2.0"

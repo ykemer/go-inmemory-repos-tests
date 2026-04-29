@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type problem struct {
+type Problem struct {
 	Type          string            `json:"type"`
 	Title         string            `json:"title"`
 	Status        int               `json:"status"`
@@ -17,7 +17,7 @@ type problem struct {
 }
 
 // ProblemJSONErrorHandler is a Fiber ErrorHandler that formats every error
-// as an RFC 7807 application/problem+json response.
+// as an RFC 7807 application/Problem+json response.
 //
 // Handlers signal validation failures by storing a map[string]string in
 // c.Locals("invalid_params") before returning the error.
@@ -31,7 +31,7 @@ func ProblemJSONErrorHandler(c *fiber.Ctx, err error) error {
 		detail = fiberErr.Message
 	}
 
-	p := problem{
+	p := Problem{
 		Type:   fmt.Sprintf("https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/%d", code),
 		Title:  http.StatusText(code),
 		Status: code,
@@ -44,5 +44,5 @@ func ProblemJSONErrorHandler(c *fiber.Ctx, err error) error {
 		}
 	}
 
-	return c.Status(code).JSON(p, "application/problem+json")
+	return c.Status(code).JSON(p, "application/Problem+json")
 }
