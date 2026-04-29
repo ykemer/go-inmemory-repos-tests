@@ -4,13 +4,11 @@ import (
 	"context"
 	"fmt"
 	"strconv"
-	"sync"
 	"tests/internal/models"
 	"time"
 )
 
 type InMemoryOrgsRepository struct {
-	mu     sync.RWMutex
 	data   map[uint]models.Organization
 	nextID uint
 
@@ -34,9 +32,6 @@ func (r *InMemoryOrgsRepository) List(ctx context.Context) ([]models.Organizatio
 		return r.OnList(ctx)
 	}
 
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
 	orgs := make([]models.Organization, 0, len(r.data))
 	for _, org := range r.data {
 		orgs = append(orgs, org)
@@ -48,9 +43,6 @@ func (r *InMemoryOrgsRepository) GetByID(ctx context.Context, id string) (*model
 	if r.OnGetByID != nil {
 		return r.OnGetByID(ctx, id)
 	}
-
-	r.mu.RLock()
-	defer r.mu.RUnlock()
 
 	uintID, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
@@ -69,9 +61,6 @@ func (r *InMemoryOrgsRepository) Create(ctx context.Context, data *models.Organi
 		return r.OnCreate(ctx, data)
 	}
 
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
 	data.ID = r.nextID
 	data.CreatedAt = time.Now()
 	r.data[r.nextID] = *data
@@ -83,9 +72,6 @@ func (r *InMemoryOrgsRepository) Update(ctx context.Context, id string, data *mo
 	if r.OnUpdate != nil {
 		return r.OnUpdate(ctx, id, data)
 	}
-
-	r.mu.Lock()
-	defer r.mu.Unlock()
 
 	uintID, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
@@ -102,9 +88,6 @@ func (r *InMemoryOrgsRepository) Delete(ctx context.Context, id string) error {
 		return r.OnDelete(ctx, id)
 	}
 
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
 	uintID, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
 		return fmt.Errorf("invalid id: %w", err)
@@ -112,16 +95,4 @@ func (r *InMemoryOrgsRepository) Delete(ctx context.Context, id string) error {
 
 	delete(r.data, uint(uintID))
 	return nil
-}
-
-func (r *InMemoryOrgsRepository) Clear() {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	r.data = make(map[uint]models.Organization)
-	r.nextID = 1
-	r.OnList = nil
-	r.OnGetByID = nil
-	r.OnCreate = nil
-	r.OnUpdate = nil
-	r.OnDelete = nil
 }

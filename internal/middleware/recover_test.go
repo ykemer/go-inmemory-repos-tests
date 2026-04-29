@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http/httptest"
 	"strings"
 	"testing"
@@ -128,6 +129,10 @@ func TestRecover_LogContainsStackTrace(t *testing.T) {
 // ── Default logger (no logf arg) ──────────────────────────────────────────────
 
 func TestRecover_DefaultLogger_DoesNotPanic(t *testing.T) {
+	// Suppress output from log.Printf (the default logger fallback).
+	log.SetOutput(io.Discard)
+	t.Cleanup(func() { log.SetOutput(io.Discard) })
+
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
 		ErrorHandler:          ProblemJSONErrorHandler,

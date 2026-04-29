@@ -4,12 +4,10 @@ import (
 	"context"
 	"fmt"
 	"strconv"
-	"sync"
 	"tests/internal/models"
 )
 
 type InMemoryContractsRepository struct {
-	mu     sync.RWMutex
 	data   map[uint]models.Contract
 	nextID uint
 
@@ -33,9 +31,6 @@ func (r *InMemoryContractsRepository) ListByOrgId(ctx context.Context, orgId str
 		return r.OnListByOrgId(ctx, orgId)
 	}
 
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
 	uintOrgID, err := strconv.ParseUint(orgId, 10, 32)
 	if err != nil {
 		return nil, fmt.Errorf("invalid organization id: %w", err)
@@ -54,9 +49,6 @@ func (r *InMemoryContractsRepository) GetByOrgIdAndContractId(ctx context.Contex
 	if r.OnGetByOrgIdAndContractId != nil {
 		return r.OnGetByOrgIdAndContractId(ctx, orgId, contractId)
 	}
-
-	r.mu.RLock()
-	defer r.mu.RUnlock()
 
 	uintOrgID, err := strconv.ParseUint(orgId, 10, 32)
 	if err != nil {
@@ -80,9 +72,6 @@ func (r *InMemoryContractsRepository) Create(ctx context.Context, data *models.C
 		return r.OnCreate(ctx, data)
 	}
 
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
 	data.ID = r.nextID
 	r.data[r.nextID] = *data
 	r.nextID++
@@ -93,9 +82,6 @@ func (r *InMemoryContractsRepository) Update(ctx context.Context, id string, dat
 	if r.OnUpdate != nil {
 		return r.OnUpdate(ctx, id, data)
 	}
-
-	r.mu.Lock()
-	defer r.mu.Unlock()
 
 	uintID, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
@@ -112,9 +98,6 @@ func (r *InMemoryContractsRepository) Delete(ctx context.Context, id string) err
 		return r.OnDelete(ctx, id)
 	}
 
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
 	uintID, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
 		return fmt.Errorf("invalid id: %w", err)
@@ -122,16 +105,4 @@ func (r *InMemoryContractsRepository) Delete(ctx context.Context, id string) err
 
 	delete(r.data, uint(uintID))
 	return nil
-}
-
-func (r *InMemoryContractsRepository) Clear() {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	r.data = make(map[uint]models.Contract)
-	r.nextID = 1
-	r.OnListByOrgId = nil
-	r.OnGetByOrgIdAndContractId = nil
-	r.OnCreate = nil
-	r.OnUpdate = nil
-	r.OnDelete = nil
 }
