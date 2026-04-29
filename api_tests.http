@@ -1,0 +1,145 @@
+### Variables
+@baseUrl = http://localhost:3000/api
+
+### Organizations
+
+# @name listOrganizations
+GET {{baseUrl}}/organizations
+
+###
+
+# @name getOrganization
+@orgId = 1
+GET {{baseUrl}}/organizations/{{orgId}}
+
+###
+
+# @name getOrganizationNotFound
+GET {{baseUrl}}/organizations/999
+
+###
+
+# @name createOrganization
+POST {{baseUrl}}/organizations
+Content-Type: application/json
+
+{
+    "name": "Acme Corp",
+    "email": "contact@acme.com"
+}
+
+###
+
+# @name updateOrganization
+PUT {{baseUrl}}/organizations/{{orgId}}
+Content-Type: application/json
+
+{
+    "name": "Acme Corp Updated",
+    "email": "new-contact@acme.com"
+}
+
+###
+
+# @name updateOrganizationNotFound
+PUT {{baseUrl}}/organizations/999
+Content-Type: application/json
+
+{
+    "name": "Acme Corp Updated",
+    "email": "new-contact@acme.com"
+}
+
+###
+
+# @name deleteOrganization
+DELETE {{baseUrl}}/organizations/{{orgId}}
+
+###
+
+# @name deleteOrganizationNotFound
+DELETE {{baseUrl}}/organizations/999
+
+
+### Contracts
+
+# @name listContracts
+GET {{baseUrl}}/organizations/{{orgId}}/contracts
+
+###
+
+# @name listContractsOrgNotFound
+GET {{baseUrl}}/organizations/999/contracts
+
+###
+
+# @name getContract
+@contractId = 1
+GET {{baseUrl}}/organizations/{{orgId}}/contracts/{{contractId}}
+
+###
+
+# @name getContractNotFound
+GET {{baseUrl}}/organizations/{{orgId}}/contracts/999
+
+###
+
+# @name createContract
+POST {{baseUrl}}/organizations/{{orgId}}/contracts
+Content-Type: application/json
+
+{
+    "title": "Software Development Agreement",
+    "description": "Annual contract for platform maintenance",
+    "start_date": "2024-01-01T00:00:00Z",
+    "end_date": "2024-12-31T23:59:59Z"
+}
+
+###
+
+# @name createContractOrgNotFound
+POST {{baseUrl}}/organizations/999/contracts
+Content-Type: application/json
+
+{
+    "title": "Software Development Agreement",
+    "description": "Annual contract for platform maintenance",
+    "start_date": "2024-01-01T00:00:00Z",
+    "end_date": "2024-12-31T23:59:59Z"
+}
+
+###
+
+# @name updateContract
+PUT {{baseUrl}}/organizations/{{orgId}}/contracts/{{contractId}}
+Content-Type: application/json
+
+{
+    "title": "Service Agreement Updated",
+    "description": "Updated description for testing",
+    "start_date": "2024-02-01T00:00:00Z",
+    "end_date": "2024-12-31T23:59:59Z"
+}
+
+###
+
+# @name updateContractNotFound
+PUT {{baseUrl}}/organizations/{{orgId}}/contracts/999
+Content-Type: application/json
+
+{
+    "title": "Service Agreement Updated",
+    "description": "Updated description for testing",
+    "start_date": "2024-02-01T00:00:00Z",
+    "end_date": "2024-12-31T23:59:59Z"
+}
+
+###
+
+# @name deleteContract
+DELETE {{baseUrl}}/organizations/{{orgId}}/contracts/{{contractId}}
+
+###
+
+# @name deleteContractNotFound
+DELETE {{baseUrl}}/organizations/{{orgId}}/contracts/999

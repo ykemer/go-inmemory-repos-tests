@@ -1,0 +1,20 @@
+.PHONY: run test build clean
+
+# Run the API application
+run:
+	go run cmd/api/main.go
+
+# Run all tests with verbose output
+test:
+	go test ./... -v
+
+test-no-cache:
+	go test ./... -v -count=1
+
+# Build the project
+build:
+	go build -o bin/api cmd/api/main.go
+
+# Clean build artifacts
+clean:
+	rm -rf bin/

@@ -1,0 +1,274 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-04-30T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v9",
+  "resources": [
+    {
+      "_id": "wrk_1",
+      "_type": "workspace",
+      "name": "tests API",
+      "description": "Organizations and Contracts REST API",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_1",
+      "_type": "environment",
+      "parentId": "wrk_1",
+      "name": "Base Environment",
+      "data": {
+        "baseUrl": "http://localhost:3000/api",
+        "orgId": "1",
+        "contractId": "1"
+      }
+    },
+    {
+      "_id": "fld_orgs",
+      "_type": "request_group",
+      "parentId": "wrk_1",
+      "name": "Organizations"
+    },
+    {
+      "_id": "req_listOrganizations",
+      "_type": "request",
+      "parentId": "fld_orgs",
+      "name": "List Organizations",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/organizations",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_getOrganization",
+      "_type": "request",
+      "parentId": "fld_orgs",
+      "name": "Get Organization",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/organizations/{{ _.orgId }}",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_getOrganizationNotFound",
+      "_type": "request",
+      "parentId": "fld_orgs",
+      "name": "Get Organization (Not Found)",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/organizations/999",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_createOrganization",
+      "_type": "request",
+      "parentId": "fld_orgs",
+      "name": "Create Organization",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/organizations",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n    \"name\": \"Acme Corp\",\n    \"email\": \"contact@acme.com\"\n}"
+      }
+    },
+    {
+      "_id": "req_updateOrganization",
+      "_type": "request",
+      "parentId": "fld_orgs",
+      "name": "Update Organization",
+      "method": "PUT",
+      "url": "{{ _.baseUrl }}/organizations/{{ _.orgId }}",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n    \"name\": \"Acme Corp Updated\",\n    \"email\": \"new-contact@acme.com\"\n}"
+      }
+    },
+    {
+      "_id": "req_updateOrganizationNotFound",
+      "_type": "request",
+      "parentId": "fld_orgs",
+      "name": "Update Organization (Not Found)",
+      "method": "PUT",
+      "url": "{{ _.baseUrl }}/organizations/999",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n    \"name\": \"Acme Corp Updated\",\n    \"email\": \"new-contact@acme.com\"\n}"
+      }
+    },
+    {
+      "_id": "req_deleteOrganization",
+      "_type": "request",
+      "parentId": "fld_orgs",
+      "name": "Delete Organization",
+      "method": "DELETE",
+      "url": "{{ _.baseUrl }}/organizations/{{ _.orgId }}",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_deleteOrganizationNotFound",
+      "_type": "request",
+      "parentId": "fld_orgs",
+      "name": "Delete Organization (Not Found)",
+      "method": "DELETE",
+      "url": "{{ _.baseUrl }}/organizations/999",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "fld_contracts",
+      "_type": "request_group",
+      "parentId": "wrk_1",
+      "name": "Contracts"
+    },
+    {
+      "_id": "req_listContracts",
+      "_type": "request",
+      "parentId": "fld_contracts",
+      "name": "List Contracts",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/organizations/{{ _.orgId }}/contracts",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_listContractsOrgNotFound",
+      "_type": "request",
+      "parentId": "fld_contracts",
+      "name": "List Contracts (Org Not Found)",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/organizations/999/contracts",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_getContract",
+      "_type": "request",
+      "parentId": "fld_contracts",
+      "name": "Get Contract",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/organizations/{{ _.orgId }}/contracts/{{ _.contractId }}",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_getContractNotFound",
+      "_type": "request",
+      "parentId": "fld_contracts",
+      "name": "Get Contract (Not Found)",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/organizations/{{ _.orgId }}/contracts/999",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_createContract",
+      "_type": "request",
+      "parentId": "fld_contracts",
+      "name": "Create Contract",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/organizations/{{ _.orgId }}/contracts",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n    \"title\": \"Software Development Agreement\",\n    \"description\": \"Annual contract for platform maintenance\",\n    \"start_date\": \"2024-01-01T00:00:00Z\",\n    \"end_date\": \"2024-12-31T23:59:59Z\"\n}"
+      }
+    },
+    {
+      "_id": "req_createContractOrgNotFound",
+      "_type": "request",
+      "parentId": "fld_contracts",
+      "name": "Create Contract (Org Not Found)",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/organizations/999/contracts",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n    \"title\": \"Software Development Agreement\",\n    \"description\": \"Annual contract for platform maintenance\",\n    \"start_date\": \"2024-01-01T00:00:00Z\",\n    \"end_date\": \"2024-12-31T23:59:59Z\"\n}"
+      }
+    },
+    {
+      "_id": "req_updateContract",
+      "_type": "request",
+      "parentId": "fld_contracts",
+      "name": "Update Contract",
+      "method": "PUT",
+      "url": "{{ _.baseUrl }}/organizations/{{ _.orgId }}/contracts/{{ _.contractId }}",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n    \"title\": \"Service Agreement Updated\",\n    \"description\": \"Updated description for testing\",\n    \"start_date\": \"2024-02-01T00:00:00Z\",\n    \"end_date\": \"2024-12-31T23:59:59Z\"\n}"
+      }
+    },
+    {
+      "_id": "req_updateContractNotFound",
+      "_type": "request",
+      "parentId": "fld_contracts",
+      "name": "Update Contract (Not Found)",
+      "method": "PUT",
+      "url": "{{ _.baseUrl }}/organizations/{{ _.orgId }}/contracts/999",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n    \"title\": \"Service Agreement Updated\",\n    \"description\": \"Updated description for testing\",\n    \"start_date\": \"2024-02-01T00:00:00Z\",\n    \"end_date\": \"2024-12-31T23:59:59Z\"\n}"
+      }
+    },
+    {
+      "_id": "req_deleteContract",
+      "_type": "request",
+      "parentId": "fld_contracts",
+      "name": "Delete Contract",
+      "method": "DELETE",
+      "url": "{{ _.baseUrl }}/organizations/{{ _.orgId }}/contracts/{{ _.contractId }}",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_deleteContractNotFound",
+      "_type": "request",
+      "parentId": "fld_contracts",
+      "name": "Delete Contract (Not Found)",
+      "method": "DELETE",
+      "url": "{{ _.baseUrl }}/organizations/{{ _.orgId }}/contracts/999",
+      "headers": [],
+      "body": {}
+    }
+  ]
+}
