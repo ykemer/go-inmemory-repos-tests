@@ -44,6 +44,5 @@ func ProblemJSONErrorHandler(c *fiber.Ctx, err error) error {
 		}
 	}
 
-	c.Set(fiber.HeaderContentType, "application/problem+json")
-	return c.Status(code).JSON(p)
+	return c.Status(code).JSON(p, "application/problem+json")
 }

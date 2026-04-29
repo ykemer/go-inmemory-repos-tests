@@ -2,6 +2,9 @@ package main
 
 import (
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 	"tests/internal/config"
 	"tests/internal/handlers"
 	"tests/internal/idempotency"
@@ -36,6 +39,7 @@ func main() {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: middleware.ProblemJSONErrorHandler,
 	})
+	app.Use(middleware.Recover())
 	app.Use(logger.New())
 	app.Use(limiter.New(limiter.Config{
 		Max:        100,
@@ -63,8 +67,24 @@ func main() {
 	orgs.Put("/:orgId/contracts/:contractId", contractHandler.Update)
 	orgs.Delete("/:orgId/contracts/:contractId", contractHandler.Delete)
 
-	log.Printf("Server starting on port %s", cfg.AppPort)
-	if err := app.Listen(":" + cfg.AppPort); err != nil {
-		log.Fatal(err)
+	// Start the server in a goroutine so the main goroutine can wait for a
+	// shutdown signal.
+	go func() {
+		log.Printf("Server starting on port %s", cfg.AppPort)
+		if err := app.Listen(":" + cfg.AppPort); err != nil {
+			log.Fatalf("Server error: %v", err)
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	log.Println("Shutdown signal received, draining connections (timeout: 10s)...")
+
+	if err := app.ShutdownWithTimeout(10 * time.Second); err != nil {
+		log.Fatalf("Graceful shutdown failed: %v", err)
 	}
+
+	log.Println("Server stopped cleanly")
 }
