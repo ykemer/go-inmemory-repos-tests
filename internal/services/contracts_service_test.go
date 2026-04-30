@@ -12,7 +12,10 @@ import (
 )
 
 func TestContractService_ListByOrg(t *testing.T) {
+	t.Parallel()
+
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		orgRepo := repositories.NewInMemoryOrgsRepository()
 		contractRepo := repositories.NewInMemoryContractsRepository()
 		service := NewContractService(contractRepo, orgRepo)
@@ -31,6 +34,7 @@ func TestContractService_ListByOrg(t *testing.T) {
 	})
 
 	t.Run("OrgNotFound", func(t *testing.T) {
+		t.Parallel()
 		orgRepo := repositories.NewInMemoryOrgsRepository()
 		contractRepo := repositories.NewInMemoryContractsRepository()
 		service := NewContractService(contractRepo, orgRepo)
@@ -42,6 +46,7 @@ func TestContractService_ListByOrg(t *testing.T) {
 	})
 
 	t.Run("RepoError", func(t *testing.T) {
+		t.Parallel()
 		orgRepo := repositories.NewInMemoryOrgsRepository()
 		org := models.Organization{Name: "Org"}
 		orgRepo.Create(context.Background(), &org)
@@ -57,7 +62,10 @@ func TestContractService_ListByOrg(t *testing.T) {
 }
 
 func TestContractService_Get(t *testing.T) {
+	t.Parallel()
+
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		orgRepo := repositories.NewInMemoryOrgsRepository()
 		contractRepo := repositories.NewInMemoryContractsRepository()
 		service := NewContractService(contractRepo, orgRepo)
@@ -76,6 +84,7 @@ func TestContractService_Get(t *testing.T) {
 	})
 
 	t.Run("NotFound", func(t *testing.T) {
+		t.Parallel()
 		orgRepo := repositories.NewInMemoryOrgsRepository()
 		contractRepo := repositories.NewInMemoryContractsRepository()
 		service := NewContractService(contractRepo, orgRepo)
@@ -88,7 +97,10 @@ func TestContractService_Get(t *testing.T) {
 }
 
 func TestContractService_Create(t *testing.T) {
+	t.Parallel()
+
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		orgRepo := repositories.NewInMemoryOrgsRepository()
 		contractRepo := repositories.NewInMemoryContractsRepository()
 		service := NewContractService(contractRepo, orgRepo)
@@ -107,6 +119,7 @@ func TestContractService_Create(t *testing.T) {
 	})
 
 	t.Run("OrgNotFound", func(t *testing.T) {
+		t.Parallel()
 		orgRepo := repositories.NewInMemoryOrgsRepository()
 		contractRepo := repositories.NewInMemoryContractsRepository()
 		service := NewContractService(contractRepo, orgRepo)
@@ -120,6 +133,7 @@ func TestContractService_Create(t *testing.T) {
 	})
 
 	t.Run("RepoCreateError", func(t *testing.T) {
+		t.Parallel()
 		orgRepo := repositories.NewInMemoryOrgsRepository()
 		org := models.Organization{Name: "Acme"}
 		orgRepo.Create(context.Background(), &org)
@@ -135,7 +149,10 @@ func TestContractService_Create(t *testing.T) {
 }
 
 func TestContractService_Update(t *testing.T) {
+	t.Parallel()
+
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		orgRepo := repositories.NewInMemoryOrgsRepository()
 		contractRepo := repositories.NewInMemoryContractsRepository()
 		service := NewContractService(contractRepo, orgRepo)
@@ -159,6 +176,7 @@ func TestContractService_Update(t *testing.T) {
 	})
 
 	t.Run("NotFound", func(t *testing.T) {
+		t.Parallel()
 		orgRepo := repositories.NewInMemoryOrgsRepository()
 		contractRepo := repositories.NewInMemoryContractsRepository()
 		service := NewContractService(contractRepo, orgRepo)
@@ -171,6 +189,7 @@ func TestContractService_Update(t *testing.T) {
 	})
 
 	t.Run("RepoUpdateError", func(t *testing.T) {
+		t.Parallel()
 		orgRepo := repositories.NewInMemoryOrgsRepository()
 		org := models.Organization{Name: "Acme"}
 		orgRepo.Create(context.Background(), &org)
@@ -189,7 +208,10 @@ func TestContractService_Update(t *testing.T) {
 }
 
 func TestContractService_Delete(t *testing.T) {
+	t.Parallel()
+
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		orgRepo := repositories.NewInMemoryOrgsRepository()
 		contractRepo := repositories.NewInMemoryContractsRepository()
 		service := NewContractService(contractRepo, orgRepo)
@@ -207,6 +229,7 @@ func TestContractService_Delete(t *testing.T) {
 	})
 
 	t.Run("NotFound", func(t *testing.T) {
+		t.Parallel()
 		orgRepo := repositories.NewInMemoryOrgsRepository()
 		contractRepo := repositories.NewInMemoryContractsRepository()
 		service := NewContractService(contractRepo, orgRepo)

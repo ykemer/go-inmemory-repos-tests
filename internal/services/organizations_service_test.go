@@ -12,7 +12,10 @@ import (
 )
 
 func TestOrganizationService_List(t *testing.T) {
+	t.Parallel()
+
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		repo := repositories.NewInMemoryOrgsRepository()
 		service := NewOrganizationService(repo)
 		ctx := context.Background()
@@ -27,6 +30,7 @@ func TestOrganizationService_List(t *testing.T) {
 	})
 
 	t.Run("EmptyList", func(t *testing.T) {
+		t.Parallel()
 		repo := repositories.NewInMemoryOrgsRepository()
 		service := NewOrganizationService(repo)
 		ctx := context.Background()
@@ -38,6 +42,7 @@ func TestOrganizationService_List(t *testing.T) {
 	})
 
 	t.Run("RepoError", func(t *testing.T) {
+		t.Parallel()
 		repo := repositories.NewInMemoryOrgsRepository()
 		repo.OnList = func(ctx context.Context) ([]models.Organization, error) {
 			return nil, fmt.Errorf("db error")
@@ -49,7 +54,10 @@ func TestOrganizationService_List(t *testing.T) {
 }
 
 func TestOrganizationService_Get(t *testing.T) {
+	t.Parallel()
+
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		repo := repositories.NewInMemoryOrgsRepository()
 		service := NewOrganizationService(repo)
 		ctx := context.Background()
@@ -64,6 +72,7 @@ func TestOrganizationService_Get(t *testing.T) {
 	})
 
 	t.Run("NotFound", func(t *testing.T) {
+		t.Parallel()
 		repo := repositories.NewInMemoryOrgsRepository()
 		service := NewOrganizationService(repo)
 		ctx := context.Background()
@@ -76,7 +85,10 @@ func TestOrganizationService_Get(t *testing.T) {
 }
 
 func TestOrganizationService_Create(t *testing.T) {
+	t.Parallel()
+
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		repo := repositories.NewInMemoryOrgsRepository()
 		service := NewOrganizationService(repo)
 		ctx := context.Background()
@@ -94,6 +106,7 @@ func TestOrganizationService_Create(t *testing.T) {
 	})
 
 	t.Run("RepoError", func(t *testing.T) {
+		t.Parallel()
 		repo := repositories.NewInMemoryOrgsRepository()
 		repo.OnCreate = func(ctx context.Context, data *models.Organization) error {
 			return fmt.Errorf("db error")
@@ -105,7 +118,10 @@ func TestOrganizationService_Create(t *testing.T) {
 }
 
 func TestOrganizationService_Update(t *testing.T) {
+	t.Parallel()
+
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		repo := repositories.NewInMemoryOrgsRepository()
 		service := NewOrganizationService(repo)
 		ctx := context.Background()
@@ -128,6 +144,7 @@ func TestOrganizationService_Update(t *testing.T) {
 	})
 
 	t.Run("NotFound", func(t *testing.T) {
+		t.Parallel()
 		repo := repositories.NewInMemoryOrgsRepository()
 		service := NewOrganizationService(repo)
 		ctx := context.Background()
@@ -139,6 +156,7 @@ func TestOrganizationService_Update(t *testing.T) {
 	})
 
 	t.Run("RepoUpdateError", func(t *testing.T) {
+		t.Parallel()
 		repo := repositories.NewInMemoryOrgsRepository()
 		org := models.Organization{Name: "Old"}
 		repo.Create(context.Background(), &org)
@@ -153,7 +171,10 @@ func TestOrganizationService_Update(t *testing.T) {
 }
 
 func TestOrganizationService_Delete(t *testing.T) {
+	t.Parallel()
+
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		repo := repositories.NewInMemoryOrgsRepository()
 		service := NewOrganizationService(repo)
 		ctx := context.Background()
@@ -169,6 +190,7 @@ func TestOrganizationService_Delete(t *testing.T) {
 	})
 
 	t.Run("NotFound", func(t *testing.T) {
+		t.Parallel()
 		repo := repositories.NewInMemoryOrgsRepository()
 		service := NewOrganizationService(repo)
 		ctx := context.Background()
