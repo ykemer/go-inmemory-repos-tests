@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"strconv"
 	"tests/internal/config"
 	"tests/internal/dtos"
 	"tests/internal/repositories"
@@ -34,6 +35,16 @@ func main() {
 	}
 }
 
+// parseUint parses a string MCP parameter as a positive uint.
+// Returns 0 and an error message if the value is missing, non-numeric, or zero.
+func parseUint(req mcp.CallToolRequest, key string) (uint, string) {
+	val, err := strconv.ParseUint(mcp.ParseString(req, key, ""), 10, 64)
+	if err != nil || val == 0 {
+		return 0, key + " must be a positive integer"
+	}
+	return uint(val), ""
+}
+
 // ── Organizations ─────────────────────────────────────────────────────────────
 
 func registerOrgTools(s *server.MCPServer, svc *services.OrganizationService) {
@@ -56,7 +67,11 @@ func registerOrgTools(s *server.MCPServer, svc *services.OrganizationService) {
 			mcp.WithString("id", mcp.Required(), mcp.Description("Organization ID")),
 		),
 		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-			res, err := svc.Get(ctx, mcp.ParseString(req, "id", ""))
+			id, errMsg := parseUint(req, "id")
+			if errMsg != "" {
+				return mcp.NewToolResultError(errMsg), nil
+			}
+			res, err := svc.Get(ctx, id)
 			if err != nil {
 				return mcp.NewToolResultError(err.Error()), nil
 			}
@@ -90,7 +105,11 @@ func registerOrgTools(s *server.MCPServer, svc *services.OrganizationService) {
 			mcp.WithString("email", mcp.Required(), mcp.Description("New email address")),
 		),
 		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-			res, err := svc.Update(ctx, mcp.ParseString(req, "id", ""), dtos.UpdateOrganizationRequest{
+			id, errMsg := parseUint(req, "id")
+			if errMsg != "" {
+				return mcp.NewToolResultError(errMsg), nil
+			}
+			res, err := svc.Update(ctx, id, dtos.UpdateOrganizationRequest{
 				Name:  mcp.ParseString(req, "name", ""),
 				Email: mcp.ParseString(req, "email", ""),
 			})
@@ -107,7 +126,11 @@ func registerOrgTools(s *server.MCPServer, svc *services.OrganizationService) {
 			mcp.WithString("id", mcp.Required(), mcp.Description("Organization ID")),
 		),
 		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-			if err := svc.Delete(ctx, mcp.ParseString(req, "id", "")); err != nil {
+			id, errMsg := parseUint(req, "id")
+			if errMsg != "" {
+				return mcp.NewToolResultError(errMsg), nil
+			}
+			if err := svc.Delete(ctx, id); err != nil {
 				return mcp.NewToolResultError(err.Error()), nil
 			}
 			return mcp.NewToolResultText("organization deleted"), nil
@@ -124,7 +147,11 @@ func registerContractTools(s *server.MCPServer, svc *services.ContractService) {
 			mcp.WithString("org_id", mcp.Required(), mcp.Description("Organization ID")),
 		),
 		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-			res, err := svc.ListByOrg(ctx, mcp.ParseString(req, "org_id", ""))
+			orgId, errMsg := parseUint(req, "org_id")
+			if errMsg != "" {
+				return mcp.NewToolResultError(errMsg), nil
+			}
+			res, err := svc.ListByOrg(ctx, orgId)
 			if err != nil {
 				return mcp.NewToolResultError(err.Error()), nil
 			}
@@ -139,10 +166,15 @@ func registerContractTools(s *server.MCPServer, svc *services.ContractService) {
 			mcp.WithString("contract_id", mcp.Required(), mcp.Description("Contract ID")),
 		),
 		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-			res, err := svc.Get(ctx,
-				mcp.ParseString(req, "org_id", ""),
-				mcp.ParseString(req, "contract_id", ""),
-			)
+			orgId, errMsg := parseUint(req, "org_id")
+			if errMsg != "" {
+				return mcp.NewToolResultError(errMsg), nil
+			}
+			contractId, errMsg := parseUint(req, "contract_id")
+			if errMsg != "" {
+				return mcp.NewToolResultError(errMsg), nil
+			}
+			res, err := svc.Get(ctx, orgId, contractId)
 			if err != nil {
 				return mcp.NewToolResultError(err.Error()), nil
 			}
@@ -160,6 +192,10 @@ func registerContractTools(s *server.MCPServer, svc *services.ContractService) {
 			mcp.WithString("end_date", mcp.Required(), mcp.Description("End date (RFC3339, must be after start_date)")),
 		),
 		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+			orgId, errMsg := parseUint(req, "org_id")
+			if errMsg != "" {
+				return mcp.NewToolResultError(errMsg), nil
+			}
 			start, err := time.Parse(time.RFC3339, mcp.ParseString(req, "start_date", ""))
 			if err != nil {
 				return mcp.NewToolResultError("start_date must be RFC3339 (e.g. 2024-01-01T00:00:00Z)"), nil
@@ -168,7 +204,7 @@ func registerContractTools(s *server.MCPServer, svc *services.ContractService) {
 			if err != nil {
 				return mcp.NewToolResultError("end_date must be RFC3339 (e.g. 2024-12-31T23:59:59Z)"), nil
 			}
-			res, err := svc.Create(ctx, mcp.ParseString(req, "org_id", ""), dtos.CreateContractRequest{
+			res, err := svc.Create(ctx, orgId, dtos.CreateContractRequest{
 				Title:       mcp.ParseString(req, "title", ""),
 				Description: mcp.ParseString(req, "description", ""),
 				StartDate:   start,
@@ -192,6 +228,14 @@ func registerContractTools(s *server.MCPServer, svc *services.ContractService) {
 			mcp.WithString("end_date", mcp.Required(), mcp.Description("New end date (RFC3339, must be after start_date)")),
 		),
 		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+			orgId, errMsg := parseUint(req, "org_id")
+			if errMsg != "" {
+				return mcp.NewToolResultError(errMsg), nil
+			}
+			contractId, errMsg := parseUint(req, "contract_id")
+			if errMsg != "" {
+				return mcp.NewToolResultError(errMsg), nil
+			}
 			start, err := time.Parse(time.RFC3339, mcp.ParseString(req, "start_date", ""))
 			if err != nil {
 				return mcp.NewToolResultError("start_date must be RFC3339"), nil
@@ -200,16 +244,12 @@ func registerContractTools(s *server.MCPServer, svc *services.ContractService) {
 			if err != nil {
 				return mcp.NewToolResultError("end_date must be RFC3339"), nil
 			}
-			res, err := svc.Update(ctx,
-				mcp.ParseString(req, "org_id", ""),
-				mcp.ParseString(req, "contract_id", ""),
-				dtos.UpdateContractRequest{
-					Title:       mcp.ParseString(req, "title", ""),
-					Description: mcp.ParseString(req, "description", ""),
-					StartDate:   start,
-					EndDate:     end,
-				},
-			)
+			res, err := svc.Update(ctx, orgId, contractId, dtos.UpdateContractRequest{
+				Title:       mcp.ParseString(req, "title", ""),
+				Description: mcp.ParseString(req, "description", ""),
+				StartDate:   start,
+				EndDate:     end,
+			})
 			if err != nil {
 				return mcp.NewToolResultError(err.Error()), nil
 			}
@@ -224,10 +264,15 @@ func registerContractTools(s *server.MCPServer, svc *services.ContractService) {
 			mcp.WithString("contract_id", mcp.Required(), mcp.Description("Contract ID")),
 		),
 		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-			if err := svc.Delete(ctx,
-				mcp.ParseString(req, "org_id", ""),
-				mcp.ParseString(req, "contract_id", ""),
-			); err != nil {
+			orgId, errMsg := parseUint(req, "org_id")
+			if errMsg != "" {
+				return mcp.NewToolResultError(errMsg), nil
+			}
+			contractId, errMsg := parseUint(req, "contract_id")
+			if errMsg != "" {
+				return mcp.NewToolResultError(errMsg), nil
+			}
+			if err := svc.Delete(ctx, orgId, contractId); err != nil {
 				return mcp.NewToolResultError(err.Error()), nil
 			}
 			return mcp.NewToolResultText("contract deleted"), nil

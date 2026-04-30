@@ -21,10 +21,14 @@ func NewContractHandler(service *services.ContractService) *ContractHandler {
 // @Produce      json
 // @Param        orgId  path      int  true  "Organization ID"
 // @Success      200    {array}   dtos.ContractResponse
+// @Failure      400    {object}  dtos.ProblemDetail
 // @Failure      404    {object}  dtos.ProblemDetail
 // @Router       /organizations/{orgId}/contracts [get]
 func (h *ContractHandler) List(c *fiber.Ctx) error {
-	orgId := c.Params("orgId")
+	orgId, err := parseID(c, "orgId")
+	if err != nil {
+		return err
+	}
 	res, err := h.service.ListByOrg(c.Context(), orgId)
 	if err != nil {
 		return fiber.NewError(fiber.StatusNotFound, "Organization not found")
@@ -39,11 +43,18 @@ func (h *ContractHandler) List(c *fiber.Ctx) error {
 // @Param        orgId       path      int  true  "Organization ID"
 // @Param        contractId  path      int  true  "Contract ID"
 // @Success      200         {object}  dtos.ContractResponse
+// @Failure      400         {object}  dtos.ProblemDetail
 // @Failure      404         {object}  dtos.ProblemDetail
 // @Router       /organizations/{orgId}/contracts/{contractId} [get]
 func (h *ContractHandler) Get(c *fiber.Ctx) error {
-	orgId := c.Params("orgId")
-	contractId := c.Params("contractId")
+	orgId, err := parseID(c, "orgId")
+	if err != nil {
+		return err
+	}
+	contractId, err := parseID(c, "contractId")
+	if err != nil {
+		return err
+	}
 	res, err := h.service.Get(c.Context(), orgId, contractId)
 	if err != nil {
 		return fiber.NewError(fiber.StatusNotFound, "Contract not found")
@@ -60,11 +71,15 @@ func (h *ContractHandler) Get(c *fiber.Ctx) error {
 // @Param        Idempotency-Key  header  string                     false  "Client-generated UUID. Repeated requests with the same key return the cached response for 1 hour."
 // @Param        body             body    dtos.CreateContractRequest true   "Request body"
 // @Success      201  {object}  dtos.ContractResponse
+// @Failure      400  {object}  dtos.ProblemDetail
 // @Failure      404  {object}  dtos.ProblemDetail
 // @Failure      422  {object}  dtos.ProblemDetail
 // @Router       /organizations/{orgId}/contracts [post]
 func (h *ContractHandler) Create(c *fiber.Ctx) error {
-	orgId := c.Params("orgId")
+	orgId, err := parseID(c, "orgId")
+	if err != nil {
+		return err
+	}
 	req := new(dtos.CreateContractRequest)
 	if err := c.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Cannot parse JSON")
@@ -92,12 +107,19 @@ func (h *ContractHandler) Create(c *fiber.Ctx) error {
 // @Param        Idempotency-Key  header  string                     false  "Client-generated UUID. Repeated requests with the same key return the cached response for 1 hour."
 // @Param        body             body    dtos.UpdateContractRequest true   "Request body"
 // @Success      200  {object}  dtos.ContractResponse
+// @Failure      400  {object}  dtos.ProblemDetail
 // @Failure      404  {object}  dtos.ProblemDetail
 // @Failure      422  {object}  dtos.ProblemDetail
 // @Router       /organizations/{orgId}/contracts/{contractId} [put]
 func (h *ContractHandler) Update(c *fiber.Ctx) error {
-	orgId := c.Params("orgId")
-	contractId := c.Params("contractId")
+	orgId, err := parseID(c, "orgId")
+	if err != nil {
+		return err
+	}
+	contractId, err := parseID(c, "contractId")
+	if err != nil {
+		return err
+	}
 	req := new(dtos.UpdateContractRequest)
 	if err := c.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Cannot parse JSON")
@@ -122,11 +144,18 @@ func (h *ContractHandler) Update(c *fiber.Ctx) error {
 // @Param        orgId       path  int  true  "Organization ID"
 // @Param        contractId  path  int  true  "Contract ID"
 // @Success      204
+// @Failure      400  {object}  dtos.ProblemDetail
 // @Failure      404  {object}  dtos.ProblemDetail
 // @Router       /organizations/{orgId}/contracts/{contractId} [delete]
 func (h *ContractHandler) Delete(c *fiber.Ctx) error {
-	orgId := c.Params("orgId")
-	contractId := c.Params("contractId")
+	orgId, err := parseID(c, "orgId")
+	if err != nil {
+		return err
+	}
+	contractId, err := parseID(c, "contractId")
+	if err != nil {
+		return err
+	}
 	if err := h.service.Delete(c.Context(), orgId, contractId); err != nil {
 		return fiber.NewError(fiber.StatusNotFound, "Contract not found")
 	}

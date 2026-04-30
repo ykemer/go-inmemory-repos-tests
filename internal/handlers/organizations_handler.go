@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"strconv"
 	"tests/internal/dtos"
 	"tests/internal/services"
 
@@ -16,6 +17,15 @@ type OrganizationHandler struct {
 
 func NewOrganizationHandler(service *services.OrganizationService) *OrganizationHandler {
 	return &OrganizationHandler{service: service}
+}
+
+// parseID parses a route parameter as a positive uint, returning 400 on failure.
+func parseID(c *fiber.Ctx, param string) (uint, error) {
+	val, err := strconv.ParseUint(c.Params(param), 10, 64)
+	if err != nil || val == 0 {
+		return 0, fiber.NewError(fiber.StatusBadRequest, param+" must be a positive integer")
+	}
+	return uint(val), nil
 }
 
 // List godoc
@@ -38,10 +48,14 @@ func (h *OrganizationHandler) List(c *fiber.Ctx) error {
 // @Produce      json
 // @Param        id   path      int  true  "Organization ID"
 // @Success      200  {object}  dtos.OrganizationResponse
+// @Failure      400  {object}  dtos.ProblemDetail
 // @Failure      404  {object}  dtos.ProblemDetail
 // @Router       /organizations/{id} [get]
 func (h *OrganizationHandler) Get(c *fiber.Ctx) error {
-	id := c.Params("id")
+	id, err := parseID(c, "id")
+	if err != nil {
+		return err
+	}
 	res, err := h.service.Get(c.Context(), id)
 	if err != nil {
 		return fiber.NewError(fiber.StatusNotFound, "Organization not found")
@@ -86,11 +100,15 @@ func (h *OrganizationHandler) Create(c *fiber.Ctx) error {
 // @Param        Idempotency-Key  header  string                           false  "Client-generated UUID. Repeated requests with the same key return the cached response for 1 hour."
 // @Param        body             body    dtos.UpdateOrganizationRequest   true   "Request body"
 // @Success      200  {object}  dtos.OrganizationResponse
+// @Failure      400  {object}  dtos.ProblemDetail
 // @Failure      404  {object}  dtos.ProblemDetail
 // @Failure      422  {object}  dtos.ProblemDetail
 // @Router       /organizations/{id} [put]
 func (h *OrganizationHandler) Update(c *fiber.Ctx) error {
-	id := c.Params("id")
+	id, err := parseID(c, "id")
+	if err != nil {
+		return err
+	}
 	req := new(dtos.UpdateOrganizationRequest)
 	if err := c.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Cannot parse JSON")
@@ -114,10 +132,14 @@ func (h *OrganizationHandler) Update(c *fiber.Ctx) error {
 // @Produce      json
 // @Param        id   path  int  true  "Organization ID"
 // @Success      204
+// @Failure      400  {object}  dtos.ProblemDetail
 // @Failure      404  {object}  dtos.ProblemDetail
 // @Router       /organizations/{id} [delete]
 func (h *OrganizationHandler) Delete(c *fiber.Ctx) error {
-	id := c.Params("id")
+	id, err := parseID(c, "id")
+	if err != nil {
+		return err
+	}
 	if err := h.service.Delete(c.Context(), id); err != nil {
 		return fiber.NewError(fiber.StatusNotFound, "Organization not found")
 	}

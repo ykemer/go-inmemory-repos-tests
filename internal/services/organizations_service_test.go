@@ -56,9 +56,8 @@ func TestOrganizationService_Get(t *testing.T) {
 
 		org := models.Organization{Name: "Org 1", Email: "1@org.com"}
 		repo.Create(ctx, &org)
-		id := fmt.Sprintf("%d", org.ID)
 
-		resp, err := service.Get(ctx, id)
+		resp, err := service.Get(ctx, org.ID)
 
 		assert.NoError(t, err)
 		assert.Equal(t, org.Name, resp.Name)
@@ -69,20 +68,10 @@ func TestOrganizationService_Get(t *testing.T) {
 		service := NewOrganizationService(repo)
 		ctx := context.Background()
 
-		_, err := service.Get(ctx, "999")
+		_, err := service.Get(ctx, 999)
 
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "organization not found")
-	})
-
-	t.Run("InvalidID", func(t *testing.T) {
-		repo := repositories.NewInMemoryOrgsRepository()
-		service := NewOrganizationService(repo)
-		ctx := context.Background()
-
-		_, err := service.Get(ctx, "abc")
-
-		assert.Error(t, err)
 	})
 }
 
@@ -123,19 +112,18 @@ func TestOrganizationService_Update(t *testing.T) {
 
 		org := models.Organization{Name: "Old Name", Email: "old@org.com"}
 		repo.Create(ctx, &org)
-		id := fmt.Sprintf("%d", org.ID)
 
 		req := dtos.UpdateOrganizationRequest{
 			Name:  "New Name",
 			Email: "new@org.com",
 		}
 
-		resp, err := service.Update(ctx, id, req)
+		resp, err := service.Update(ctx, org.ID, req)
 
 		assert.NoError(t, err)
 		assert.Equal(t, req.Name, resp.Name)
 
-		updated, _ := repo.GetByID(ctx, id)
+		updated, _ := repo.GetByID(ctx, org.ID)
 		assert.Equal(t, req.Name, updated.Name)
 	})
 
@@ -145,7 +133,7 @@ func TestOrganizationService_Update(t *testing.T) {
 		ctx := context.Background()
 
 		req := dtos.UpdateOrganizationRequest{Name: "New"}
-		_, err := service.Update(ctx, "999", req)
+		_, err := service.Update(ctx, 999, req)
 
 		assert.Error(t, err)
 	})
@@ -154,13 +142,12 @@ func TestOrganizationService_Update(t *testing.T) {
 		repo := repositories.NewInMemoryOrgsRepository()
 		org := models.Organization{Name: "Old"}
 		repo.Create(context.Background(), &org)
-		id := fmt.Sprintf("%d", org.ID)
 
-		repo.OnUpdate = func(ctx context.Context, id string, data *models.Organization) error {
+		repo.OnUpdate = func(ctx context.Context, id uint, data *models.Organization) error {
 			return fmt.Errorf("db update error")
 		}
 		service := NewOrganizationService(repo)
-		_, err := service.Update(context.Background(), id, dtos.UpdateOrganizationRequest{Name: "New"})
+		_, err := service.Update(context.Background(), org.ID, dtos.UpdateOrganizationRequest{Name: "New"})
 		assert.Error(t, err)
 	})
 }
@@ -173,12 +160,11 @@ func TestOrganizationService_Delete(t *testing.T) {
 
 		org := models.Organization{Name: "Delete Me"}
 		repo.Create(ctx, &org)
-		id := fmt.Sprintf("%d", org.ID)
 
-		err := service.Delete(ctx, id)
+		err := service.Delete(ctx, org.ID)
 
 		assert.NoError(t, err)
-		res, _ := repo.GetByID(ctx, id)
+		res, _ := repo.GetByID(ctx, org.ID)
 		assert.Nil(t, res)
 	})
 
@@ -187,7 +173,7 @@ func TestOrganizationService_Delete(t *testing.T) {
 		service := NewOrganizationService(repo)
 		ctx := context.Background()
 
-		err := service.Delete(ctx, "999")
+		err := service.Delete(ctx, 999)
 		assert.Error(t, err)
 	})
 }

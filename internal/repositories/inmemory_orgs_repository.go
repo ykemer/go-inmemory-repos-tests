@@ -2,8 +2,6 @@ package repositories
 
 import (
 	"context"
-	"fmt"
-	"strconv"
 	"tests/internal/models"
 	"time"
 )
@@ -13,11 +11,9 @@ type InMemoryOrgsRepository struct {
 	nextID uint
 
 	// Programmable hooks for testing edge cases/errors
-	OnList    func(ctx context.Context) ([]models.Organization, error)
-	OnGetByID func(ctx context.Context, id string) (*models.Organization, error)
-	OnCreate  func(ctx context.Context, data *models.Organization) error
-	OnUpdate  func(ctx context.Context, id string, data *models.Organization) error
-	OnDelete  func(ctx context.Context, id string) error
+	OnList   func(ctx context.Context) ([]models.Organization, error)
+	OnCreate func(ctx context.Context, data *models.Organization) error
+	OnUpdate func(ctx context.Context, id uint, data *models.Organization) error
 }
 
 func NewInMemoryOrgsRepository() *InMemoryOrgsRepository {
@@ -39,17 +35,8 @@ func (r *InMemoryOrgsRepository) List(ctx context.Context) ([]models.Organizatio
 	return orgs, nil
 }
 
-func (r *InMemoryOrgsRepository) GetByID(ctx context.Context, id string) (*models.Organization, error) {
-	if r.OnGetByID != nil {
-		return r.OnGetByID(ctx, id)
-	}
-
-	uintID, err := strconv.ParseUint(id, 10, 32)
-	if err != nil {
-		return nil, fmt.Errorf("invalid id: %w", err)
-	}
-
-	org, ok := r.data[uint(uintID)]
+func (r *InMemoryOrgsRepository) GetByID(ctx context.Context, id uint) (*models.Organization, error) {
+	org, ok := r.data[id]
 	if !ok {
 		return nil, nil
 	}
@@ -68,31 +55,17 @@ func (r *InMemoryOrgsRepository) Create(ctx context.Context, data *models.Organi
 	return nil
 }
 
-func (r *InMemoryOrgsRepository) Update(ctx context.Context, id string, data *models.Organization) error {
+func (r *InMemoryOrgsRepository) Update(ctx context.Context, id uint, data *models.Organization) error {
 	if r.OnUpdate != nil {
 		return r.OnUpdate(ctx, id, data)
 	}
 
-	uintID, err := strconv.ParseUint(id, 10, 32)
-	if err != nil {
-		return fmt.Errorf("invalid id: %w", err)
-	}
-
-	data.ID = uint(uintID)
-	r.data[uint(uintID)] = *data
+	data.ID = id
+	r.data[id] = *data
 	return nil
 }
 
-func (r *InMemoryOrgsRepository) Delete(ctx context.Context, id string) error {
-	if r.OnDelete != nil {
-		return r.OnDelete(ctx, id)
-	}
-
-	uintID, err := strconv.ParseUint(id, 10, 32)
-	if err != nil {
-		return fmt.Errorf("invalid id: %w", err)
-	}
-
-	delete(r.data, uint(uintID))
+func (r *InMemoryOrgsRepository) Delete(ctx context.Context, id uint) error {
+	delete(r.data, id)
 	return nil
 }

@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"fmt"
-	"strconv"
 	"tests/internal/dtos"
 	"tests/internal/models"
 	"tests/internal/repositories"
@@ -18,7 +17,7 @@ func NewContractService(repo repositories.IContractsRepository, orgsRepo reposit
 	return &ContractService{repo: repo, orgsRepo: orgsRepo}
 }
 
-func (s *ContractService) ListByOrg(ctx context.Context, orgId string) ([]dtos.ContractResponse, error) {
+func (s *ContractService) ListByOrg(ctx context.Context, orgId uint) ([]dtos.ContractResponse, error) {
 	org, err := s.orgsRepo.GetByID(ctx, orgId)
 	if err != nil {
 		return nil, err
@@ -46,7 +45,7 @@ func (s *ContractService) ListByOrg(ctx context.Context, orgId string) ([]dtos.C
 	return res, nil
 }
 
-func (s *ContractService) Get(ctx context.Context, orgId string, contractId string) (dtos.ContractResponse, error) {
+func (s *ContractService) Get(ctx context.Context, orgId uint, contractId uint) (dtos.ContractResponse, error) {
 	contract, err := s.repo.GetByOrgIdAndContractId(ctx, orgId, contractId)
 	if err != nil {
 		return dtos.ContractResponse{}, err
@@ -65,13 +64,8 @@ func (s *ContractService) Get(ctx context.Context, orgId string, contractId stri
 	}, nil
 }
 
-func (s *ContractService) Create(ctx context.Context, orgIdStr string, req dtos.CreateContractRequest) (dtos.ContractResponse, error) {
-	orgId, err := strconv.ParseUint(orgIdStr, 10, 32)
-	if err != nil {
-		return dtos.ContractResponse{}, err
-	}
-
-	org, err := s.orgsRepo.GetByID(ctx, orgIdStr)
+func (s *ContractService) Create(ctx context.Context, orgId uint, req dtos.CreateContractRequest) (dtos.ContractResponse, error) {
+	org, err := s.orgsRepo.GetByID(ctx, orgId)
 	if err != nil {
 		return dtos.ContractResponse{}, err
 	}
@@ -80,7 +74,7 @@ func (s *ContractService) Create(ctx context.Context, orgIdStr string, req dtos.
 	}
 
 	contract := models.Contract{
-		OrganizationID: uint(orgId),
+		OrganizationID: orgId,
 		Title:          req.Title,
 		Description:    req.Description,
 		StartDate:      req.StartDate,
@@ -101,7 +95,7 @@ func (s *ContractService) Create(ctx context.Context, orgIdStr string, req dtos.
 	}, nil
 }
 
-func (s *ContractService) Update(ctx context.Context, orgId string, contractId string, req dtos.UpdateContractRequest) (dtos.ContractResponse, error) {
+func (s *ContractService) Update(ctx context.Context, orgId uint, contractId uint, req dtos.UpdateContractRequest) (dtos.ContractResponse, error) {
 	contract, err := s.repo.GetByOrgIdAndContractId(ctx, orgId, contractId)
 	if err != nil {
 		return dtos.ContractResponse{}, err
@@ -129,7 +123,7 @@ func (s *ContractService) Update(ctx context.Context, orgId string, contractId s
 	}, nil
 }
 
-func (s *ContractService) Delete(ctx context.Context, orgId string, contractId string) error {
+func (s *ContractService) Delete(ctx context.Context, orgId uint, contractId uint) error {
 	contract, err := s.repo.GetByOrgIdAndContractId(ctx, orgId, contractId)
 	if err != nil {
 		return err

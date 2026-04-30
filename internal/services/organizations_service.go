@@ -34,7 +34,7 @@ func (s *OrganizationService) List(ctx context.Context) ([]dtos.OrganizationResp
 	return res, nil
 }
 
-func (s *OrganizationService) Get(ctx context.Context, id string) (dtos.OrganizationResponse, error) {
+func (s *OrganizationService) Get(ctx context.Context, id uint) (dtos.OrganizationResponse, error) {
 	org, err := s.repo.GetByID(ctx, id)
 	if err != nil {
 		return dtos.OrganizationResponse{}, err
@@ -69,7 +69,7 @@ func (s *OrganizationService) Create(ctx context.Context, req dtos.CreateOrganiz
 	}, nil
 }
 
-func (s *OrganizationService) Update(ctx context.Context, id string, req dtos.UpdateOrganizationRequest) (dtos.OrganizationResponse, error) {
+func (s *OrganizationService) Update(ctx context.Context, id uint, req dtos.UpdateOrganizationRequest) (dtos.OrganizationResponse, error) {
 	org, err := s.repo.GetByID(ctx, id)
 	if err != nil {
 		return dtos.OrganizationResponse{}, err
@@ -93,7 +93,7 @@ func (s *OrganizationService) Update(ctx context.Context, id string, req dtos.Up
 	}, nil
 }
 
-func (s *OrganizationService) Delete(ctx context.Context, id string) error {
+func (s *OrganizationService) Delete(ctx context.Context, id uint) error {
 	org, err := s.repo.GetByID(ctx, id)
 	if err != nil {
 		return err
